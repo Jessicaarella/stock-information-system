@@ -10,6 +10,12 @@ import (
 	"github.com/labstack/gommon/log"
 )
 
+type Stock struct {
+	CompanyCode string
+	CompanyName string
+	LastPrice   int
+}
+
 func main() {
 	// Initiate echo framework
 	e := echo.New()

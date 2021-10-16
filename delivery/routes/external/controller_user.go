@@ -84,9 +84,53 @@ func (rest *Rest) controllerRegister(c echo.Context) error {
 	// 2. Kalo semisal ada error, maka ...
 	if err != nil {
 		// 2.1 Kemungkinan yang kedua adalah aplikasi error karena fakto eksternal (ex : database mati, atau ada code yang masih error)
-		return c.JSON(http.StatusInternalServerError, map[string]string{"message": "Failed to Create data " + err.Error()})
+		return c.JSON(http.StatusInternalServerError, map[string]string{"message": "Failed to Register user " + err.Error()})
 	}
 
 	// 3. kalo tidak ada error, tampilkan user nya
+	return c.JSON(http.StatusCreated, user)
+}
+
+func (rest *Rest) controllerUpdate(c echo.Context) error {
+	user := new(model.User)
+
+	// 1. Bind Id user
+	idString := c.Param("id")
+	id, _ := strconv.Atoi(idString)
+
+	// 2. Bind body
+	err := c.Bind(user)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{"message": "Failed to Bind " + err.Error()})
+	}
+
+	// update data users
+	err = model.Update(c, rest.DB, *user, id)
+	// 3. Kalo semisal ada error, maka ...
+	if err != nil {
+		// 3.1 Kemungkinan yang kedua adalah aplikasi error karena fakto eksternal (ex : database mati, atau ada code yang masih error)
+		return c.JSON(http.StatusInternalServerError, map[string]string{"message": "Failed to Update user data " + err.Error()})
+	}
+
+	// 4. kalo tidak ada error, tampilkan user nya
+	return c.JSON(http.StatusCreated, user)
+}
+
+func (rest *Rest) controllerDelete(c echo.Context) error {
+	user := new(model.User)
+
+	// 1. Bind Id user
+	idString := c.Param("id")
+	id, _ := strconv.Atoi(idString)
+
+	// delete data users from database
+	err := model.Delete(c, rest.DB, id)
+	// 3. Kalo semisal ada error, maka ...
+	if err != nil {
+		// 3.1 Kemungkinan yang kedua adalah aplikasi error karena fakto eksternal (ex : database mati, atau ada code yang masih error)
+		return c.JSON(http.StatusInternalServerError, map[string]string{"message": "Failed to Delete data " + err.Error()})
+	}
+
+	// 4. kalo tidak ada error, tampilkan user nya
 	return c.JSON(http.StatusCreated, user)
 }

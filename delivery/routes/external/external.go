@@ -16,7 +16,11 @@ func New(DB *sqlx.DB) *Rest {
 }
 
 func (rest *Rest) Init(e *echo.Echo) {
+	// users
 	e.GET("/users", rest.controllerGetAllUsers)
 	e.GET("/user/:id", rest.controllerGetUserById)
+	e.PUT("/user/:id", rest.controllerUpdate)
+	e.DELETE("/user/:id", rest.controllerDelete)
 	e.POST("/register", rest.controllerRegister)
+
 }
